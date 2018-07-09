@@ -1,0 +1,23 @@
+{
+    texture: player/body.png
+    texture_size: 256, 256
+    margin: 0, 0
+    {
+        size: 1.6, 1.6
+        frame_size: 64, 64
+        delay: 0.05
+        [Stand] {
+            position: 0, 0
+        }
+        [Walk] {
+            position: 0, 64
+            frame_count: 4
+            loop: true
+        }
+        [Jump] {
+            position: 0, 128
+            size: 2.4, 1.6
+            frame_size: 96, 64
+        }
+    }
+}
