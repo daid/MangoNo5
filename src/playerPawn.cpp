@@ -56,7 +56,7 @@ PlayerPawn::PlayerPawn(sp::P<sp::Node> parent, PlayerInput& controller)
     if (i.alignment == sp::Alignment::Top)
         head->setPosition(sp::Vector3d(0, 0.25 - (i.size.y / 256.0 - 1) * 0.5, 0.1));
     
-    sp::collision::Box2D shape(1, 1.25, 0, -0.125);
+    sp::collision::Box2D shape(0.8, 1.25, 0, -0.125);
     shape.fixed_rotation = true;
     setCollisionShape(shape);
 }
@@ -73,10 +73,10 @@ void PlayerPawn::onFixedUpdate()
             pos.x -= 1.0;
         else
             pos.x += 1.0;
-        getScene()->queryCollision(pos, [this](sp::P<sp::Node> object) -> bool
+        getScene()->queryCollision(pos - sp::Vector2d(0.5,0.5), pos + sp::Vector2d(0.5,0.5), [this](sp::P<sp::Node> object) -> bool
         {
             sp::P<PlayerPawn> player = object;
-            if (player)
+            if (player && player != this)
             {
                 if (animation->getFlags() & sp::SpriteAnimation::FlipFlag)
                     player->setLinearVelocity(player->getLinearVelocity2D() + sp::Vector2d(-30, 15));
