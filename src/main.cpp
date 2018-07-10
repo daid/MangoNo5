@@ -129,7 +129,7 @@ public:
         camera->setPosition(sp::Vector2d(14, 10));
         
         sp::collision::Chains2D camera_collision;
-        sp::collision::Chains2D::Path path{{-14,-15}, {14,-15}, {14,10}, {-14,10}};
+        sp::collision::Chains2D::Path path{{-14,-15}, {14,-15}, {14,13}, {-14,13}};
         camera_collision.loops.push_back(path);
         camera->setCollisionShape(camera_collision);
         
@@ -142,10 +142,13 @@ public:
         {
             previous_challange.destroy();
             previous_challange = active_challange;
+            
             if (sp::random(0, 100) < 50)
+                active_challange = new Challange("platforms", previous_challange->exit);
+            else if (sp::random(0, 100) < 50)
                 active_challange = new Challange("tumbler", previous_challange->exit);
             else
-                active_challange = new Challange("platforms", previous_challange->exit);
+                active_challange = new Challange("goingup", previous_challange->exit);
         }
     }
 

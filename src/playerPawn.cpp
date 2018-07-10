@@ -65,6 +65,29 @@ void PlayerPawn::onFixedUpdate()
 {
     sp::Vector2d velocity = getLinearVelocity2D();
     
+    if (controller.attack.getDown() && attacking == 0)
+    {
+        attacking = 5;
+        sp::Vector2d pos = getPosition2D();
+        if (animation->getFlags() & sp::SpriteAnimation::FlipFlag)
+            pos.x -= 1.0;
+        else
+            pos.x += 1.0;
+        getScene()->queryCollision(pos, [this](sp::P<sp::Node> object) -> bool
+        {
+            sp::P<PlayerPawn> player = object;
+            if (player)
+            {
+                if (animation->getFlags() & sp::SpriteAnimation::FlipFlag)
+                    player->setLinearVelocity(player->getLinearVelocity2D() + sp::Vector2d(-30, 15));
+                else
+                    player->setLinearVelocity(player->getLinearVelocity2D() + sp::Vector2d(30, 15));
+                return false;
+            }
+            return true;
+        });
+    }
+    
     //X handling
     double movement_request = controller.right.getValue() - controller.left.getValue();
     double acceleration = air_acceleration;
@@ -87,7 +110,10 @@ void PlayerPawn::onFixedUpdate()
         velocity.x += movement_request * acceleration * sp::Engine::fixed_update_delta;
     
     if (x_flip)
+    {
         velocity.x = -velocity.x;
+        movement_request = -movement_request;
+    }
 
     //Y handling
     velocity.y -= gravity * sp::Engine::fixed_update_delta;
@@ -96,10 +122,11 @@ void PlayerPawn::onFixedUpdate()
     if (jump_request)
     {
         jump_request--;
-        if (on_floor_counter > 0)
+        if (on_floor_counter > 0 || double_jump > 0)
         {
             velocity.y += v_jump + gravity * sp::Engine::fixed_update_delta;
             jump_request = 0;
+            double_jump = 0;
         }
     }
     if (controller.jump.getUp() && velocity.y > v_jump_release)
@@ -107,9 +134,9 @@ void PlayerPawn::onFixedUpdate()
 
     //Final.
     setLinearVelocity(velocity);
-    if (velocity.x < 0)
+    if (movement_request < 0)
         animation->setFlags(sp::SpriteAnimation::FlipFlag);
-    else
+    else if (movement_request > 0)
         animation->setFlags(0);
     if (on_floor_counter > 0)
     {
@@ -122,9 +149,17 @@ void PlayerPawn::onFixedUpdate()
     {
         animation->play("Jump");
     }
+    if (attacking > 0)
+    {
+        attacking--;
+        animation->play("Attack");
+    }
     
     if (on_floor_counter > 0)
+    {
+        double_jump = 1;
         on_floor_counter -= 1;
+    }
         
     
     //TMP

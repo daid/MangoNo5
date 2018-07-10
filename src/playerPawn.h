@@ -15,17 +15,19 @@ private:
     PlayerInput& controller;
     int on_floor_counter = 0;
     int jump_request = 0;
+    int double_jump = 0;
+    int attacking = 0;
 
     //X parameters
-    static constexpr double ground_acceleration = 150.0;
-    static constexpr double air_acceleration = 100.0;
+    static constexpr double ground_acceleration = 50.0;
+    static constexpr double air_acceleration = 50.0;
     static constexpr double ground_deceleration = 100.0;
-    static constexpr double air_deceleration = 10.0;
-    static constexpr double max_run_speed = 12.0;
+    static constexpr double air_deceleration = 20.0;
+    static constexpr double max_run_speed = 15.0;
 
     //Y parameters
-    static constexpr double time_to_apex = 0.6;
-    static constexpr double jump_height_max = 5.5;
+    static constexpr double time_to_apex = 0.25;
+    static constexpr double jump_height_max = 4.5;
     static constexpr double jump_height_min = 0.5;
     
     static constexpr double gravity = 2*jump_height_max/(time_to_apex*time_to_apex);

@@ -45,9 +45,13 @@ function run()
     end
 
     r = 0
-    while r < 360 * 1.5 do
+    while r < 360 do
         setTilemapRotation({14, 10}, r)
-        r = r + 0.5
+        r = r + 0.3
+        yield()
+    end
+
+    for delay=1,30 do
         yield()
     end
 
