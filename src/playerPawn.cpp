@@ -128,9 +128,10 @@ void PlayerPawn::onFixedUpdate()
         
     
     //TMP
-    if (getPosition2D().y < 0)
+    sp::Vector2d camera_position = getScene()->getCamera()->getPosition2D();
+    if (getPosition2D().y < camera_position.y - 12)
     {
-        setPosition(sp::Vector2d(getScene()->getCamera()->getPosition2D().x - 10, 19.5));
+        setPosition(camera_position + sp::Vector2d(-10, 9.5));
     }
 }
 
