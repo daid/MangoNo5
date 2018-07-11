@@ -7,7 +7,7 @@ class PlayerInput;
 class PlayerPawn : public sp::Node
 {
 public:
-    PlayerPawn(sp::P<sp::Node> parent, PlayerInput& controller);
+    PlayerPawn(sp::P<sp::Node> parent, PlayerInput& controller, sp::string head_name);
     
     virtual void onFixedUpdate() override;
     virtual void onCollision(sp::CollisionInfo& info) override;
@@ -17,6 +17,8 @@ private:
     int jump_request = 0;
     int double_jump = 0;
     int attacking = 0;
+    int respawn_delay = 0;
+    sp::P<sp::Node> head;
 
     //X parameters
     static constexpr double ground_acceleration = 50.0;

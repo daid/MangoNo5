@@ -39,7 +39,11 @@ function run()
         yield()
     end
 
-    for y=6,14 do
+    for y=3,8 do
+        setTile(4, y, tile_castleCenter)
+        setTile(23, y, tile_castleCenter)
+    end
+    for y=11,17 do
         setTile(4, y, tile_castleCenter)
         setTile(23, y, tile_castleCenter)
     end

@@ -186,11 +186,11 @@ int main(int argc, char** argv)
 
     sp::Scene* scene = new GameScene();
     
-    PlayerPawn* p = new PlayerPawn(scene->getRoot(), PlayerInput::left_controller);
+    PlayerPawn* p = new PlayerPawn(scene->getRoot(), PlayerInput::left_controller, "elephant");
     p->setPosition(sp::Vector2d(8, 8));
-    p = new PlayerPawn(scene->getRoot(), PlayerInput::right_controller);
+    p = new PlayerPawn(scene->getRoot(), PlayerInput::right_controller, "giraffe");
     p->setPosition(sp::Vector2d(8, 8));
-    p = new PlayerPawn(scene->getRoot(), PlayerInput::joy_controller);
+    p = new PlayerPawn(scene->getRoot(), PlayerInput::joy_controller, "hippo");
     p->setPosition(sp::Vector2d(8, 8));
     
     engine->run();
