@@ -174,7 +174,7 @@ int main(int argc, char** argv)
     sp::P<sp::Engine> engine = new sp::Engine();
     
     sp::gui::Theme::loadTheme("default", "gui/theme/basic.theme.txt");
-    new sp::gui::Scene(sp::Vector2d(256, 192), sp::gui::Scene::Direction::Horizontal);
+    new sp::gui::Scene(sp::Vector2d(640, 480), sp::gui::Scene::Direction::Horizontal);
 
     sp::P<sp::SceneGraphicsLayer> scene_layer = new sp::SceneGraphicsLayer(1);
     scene_layer->addRenderPass(new sp::BasicNodeRenderPass());
@@ -192,6 +192,11 @@ int main(int argc, char** argv)
     p->setPosition(sp::Vector2d(8, 8));
     p = new PlayerPawn(scene->getRoot(), PlayerInput::joy_controller, "hippo");
     p->setPosition(sp::Vector2d(8, 8));
+    
+    sp::P<sp::gui::Widget> hud = sp::gui::Loader::load("gui/hud.gui", "HUD");
+    sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud)->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/elephant.png");
+    sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud)->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/giraffe.png");
+    sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud)->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/hippo.png");
     
     engine->run();
 

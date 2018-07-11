@@ -1,0 +1,40 @@
+{
+    color: #FFFFFF
+    font: gui/theme/Kenney Bold.ttf
+    size: 8
+
+    [button.label] {
+        color.disabled: #808080
+        color.hovered: #808080
+    }
+    [button.background] {
+        image: gui/theme/button.png
+        color: #ffffffc0
+        color.hovered: #ffffff80
+    }
+    [panel] {
+        image: gui/theme/panel.png
+        color: #ffffff
+        size: 25
+    }
+    [label] {
+    }
+    [image] {
+    }
+    [progressbar.background] {
+        image: gui/theme/progress_bg.png
+    }
+    [progressbar.forground] {
+        image: gui/theme/progress_fill.png
+    }
+    [slider.background] {
+        image: gui/theme/background.png
+        color: #ffffffc0
+        color.hovered: #ffffff80
+    }
+    [slider.forground] {
+        image: gui/theme/background.png
+        color: #ffffffc0
+        color.hovered: #ffffff80
+    }
+}

@@ -21,7 +21,7 @@ private:
     sp::P<sp::Node> head;
 
     //X parameters
-    static constexpr double ground_acceleration = 50.0;
+    static constexpr double ground_acceleration = 70.0;
     static constexpr double air_acceleration = 50.0;
     static constexpr double ground_deceleration = 100.0;
     static constexpr double air_deceleration = 20.0;
