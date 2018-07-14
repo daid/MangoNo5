@@ -66,7 +66,7 @@ PlayerPawn::PlayerPawn(sp::P<sp::Node> parent, PlayerInput& controller, sp::stri
         head->setPosition(sp::Vector3d(0, 0.25 - (i.size.y / 256.0 - 1) * 0.5, 0.1));
     
     sp::collision::Box2D shape(0.8, 1.25, 0, -0.125);
-    shape.fixed_rotation = true;
+    //shape.fixed_rotation = true;
     setCollisionShape(shape);
 }
 
@@ -97,7 +97,7 @@ void PlayerPawn::onFixedUpdate()
         if (respawn_delay == 0 || controller.attack.getDown())
         {
             sp::collision::Box2D shape(0.8, 1.25, 0, -0.125);
-            shape.fixed_rotation = true;
+            //shape.fixed_rotation = true;
             setCollisionShape(shape);
 
             render_data.color.a = 1.0;
@@ -108,6 +108,7 @@ void PlayerPawn::onFixedUpdate()
     }
 
     sp::Vector2d velocity = getLinearVelocity2D();
+    setAngularVelocity(-std::min(15.0, std::max(-15.0, getRotation2D())) * 15);
     
     if (controller.attack.getDown() && attacking == 0)
     {
@@ -211,14 +212,7 @@ void PlayerPawn::onFixedUpdate()
     sp::Vector2d position = getPosition2D();
     if (position.y < camera_position.y - 12 || position.x < camera_position.x - 16)
     {
-        setPosition(camera_position + sp::Vector2d(-10, 9.5));
-        removeCollisionShape();
-
-        render_data.color.a = 0.25;
-        head->render_data.color.a = 0.5;
-        animation->play("Stand");
-
-        respawn_delay = 60;
+        delete this;
     }
 }
 
@@ -242,4 +236,26 @@ void PlayerPawn::onCollision(sp::CollisionInfo& info)
                 on_floor_counter = 3;
         }
     }
+}
+
+void PlayerPawn::respawn()
+{
+    sp::Vector2d camera_position = getScene()->getCamera()->getPosition2D();
+    
+    setPosition(camera_position + sp::Vector2d(-10, 9.5));
+    removeCollisionShape();
+
+    render_data.color.a = 0.25;
+    head->render_data.color.a = 0.5;
+    animation->play("Stand");
+
+    respawn_delay = 60;
+}
+
+sp::string PlayerPawn::getRandomHeadName()
+{
+    int count;
+    for(count=0; head_info[count].name != ""; count++) {}
+    
+    return head_info[sp::irandom(0, count-1)].name;
 }

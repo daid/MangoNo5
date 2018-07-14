@@ -11,6 +11,10 @@ public:
     
     virtual void onFixedUpdate() override;
     virtual void onCollision(sp::CollisionInfo& info) override;
+    
+    void respawn();
+    
+    static sp::string getRandomHeadName();
 private:
     PlayerInput& controller;
     int on_floor_counter = 0;

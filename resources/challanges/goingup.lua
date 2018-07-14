@@ -9,9 +9,9 @@ end
 height = irandom(30, 60)
 local x = irandom(1, 22)
 for n=4,height+10,2 do
-    setTile(x, n, tile_sandCliffLeft)
-    setTile(x+1, n, tile_sandMid)
-    setTile(x+2, n, tile_sandCliffRight)
+    setPlatformTile(x, n, tile_dirtHalfLeft)
+    setPlatformTile(x+1, n, tile_dirtHalfMid)
+    setPlatformTile(x+2, n, tile_dirtHalfRight)
     x = ((x + irandom(5, 10)) % 22) + 1
 end
 exit(28, height)

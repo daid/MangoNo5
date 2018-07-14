@@ -1,8 +1,10 @@
 #include "playerInput.h"
 
-PlayerInput PlayerInput::left_controller{0};
-PlayerInput PlayerInput::right_controller{1};
-PlayerInput PlayerInput::joy_controller{10};
+PlayerInput PlayerInput::controllers[]{
+    {0},
+    {1},
+    {2},
+};
 
 
 PlayerInput::PlayerInput(int index)
@@ -32,18 +34,19 @@ PlayerInput::PlayerInput(int index)
         extra4.setKey("G");
         start.setKey("Num2");
     }
-    if (index == 10)
+    if (index > 1)
     {
+        sp::string joy = "joy:" + sp::string(index - 2) + ":";
         left.setKey("");
-        right.setKey("joy:0:axis:0");
+        right.setKey(joy + "axis:0");
         up.setKey("");
-        down.setKey("joy:0:axis:1");
-        jump.setKey("joy:0:button:2");
-        attack.setKey("joy:0:button:1");
-        extra1.setKey("joy:0:button:0");
-        extra2.setKey("joy:0:button:3");
-        extra3.setKey("joy:0:button:4");
-        extra4.setKey("joy:0:button:5");
-        start.setKey("joy:0:button:9");
+        down.setKey(joy + "axis:1");
+        jump.setKey(joy + "button:2");
+        attack.setKey(joy + "button:1");
+        extra1.setKey(joy + "button:0");
+        extra2.setKey(joy + "button:3");
+        extra3.setKey(joy + "button:4");
+        extra4.setKey(joy + "button:5");
+        start.setKey(joy + "button:9");
     }
 }

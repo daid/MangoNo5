@@ -38,6 +38,8 @@ sp::P<sp::Window> window;
 sp::io::Keybinding escape_key{"exit", "Escape"};
 
 static void luaf_setTile(int x, int y, int tile_index, bool non_solid);
+static void luaf_setPlatformTile(int x, int y, int tile_index);
+static void luaf_removeTile(int x, int y);
 static void luaf_setExit(double x, double y);
 static sp::Vector2d luaf_getCameraPosition();
 static void luaf_setCameraPosition(sp::Vector2d pos);
@@ -59,6 +61,8 @@ public:
         setGlobal("random", sp::random);
         setGlobal("irandom", sp::irandom);
         setGlobal("setTile", luaf_setTile);
+        setGlobal("setPlatformTile", luaf_setPlatformTile);
+        setGlobal("removeTile", luaf_removeTile);
         setGlobal("exit", luaf_setExit);
         setGlobal("getCameraPosition", luaf_getCameraPosition);
         setGlobal("setCameraPosition", luaf_setCameraPosition);
@@ -99,6 +103,14 @@ static void luaf_setTile(int x, int y, int tile_index, bool non_solid)
 {
     Challange::active->tilemap->setTile(x, y, tile_index, non_solid ? sp::Tilemap::Collision::Open : sp::Tilemap::Collision::Solid);
 }
+static void luaf_setPlatformTile(int x, int y, int tile_index)
+{
+    Challange::active->tilemap->setTile(x, y, tile_index, sp::Tilemap::Collision::Platform);
+}
+static void luaf_removeTile(int x, int y)
+{
+    Challange::active->tilemap->setTile(x, y, -1);
+}
 static void luaf_setExit(double x, double y)
 {
     Challange::active->exit = Challange::active->offset + sp::Vector2d(x, y);
@@ -117,6 +129,18 @@ static void luaf_setTilemapRotation(sp::Vector2d center, double angle)
     Challange::active->tilemap->setPosition(Challange::active->offset + center - center.rotate(angle));
 }
 
+class PlayerInfo
+{
+public:
+    sp::string head_name = "elephant";
+    int lives = 10;
+    bool active = false;
+    
+    sp::P<PlayerPawn> pawn;
+    sp::P<sp::gui::Widget> hud;
+};
+std::vector<PlayerInfo> player_info;
+
 class GameScene : public sp::Scene
 {
 public:
@@ -134,6 +158,26 @@ public:
         camera->setCollisionShape(camera_collision);
         
         active_challange = new Challange("start", sp::Vector2d(0, 0));
+        hud = sp::gui::Loader::load("gui/hud.gui", "HUD");
+
+        for(unsigned int n=0; n<player_info.size(); n++)
+        {
+            PlayerInfo& info = player_info[n];
+            if (!info.active)
+                continue;
+            
+            info.pawn = new PlayerPawn(getRoot(), PlayerInput::controllers[n], info.head_name);
+            info.pawn->setPosition(sp::Vector2d(8, 8));
+            info.hud = sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud);
+            info.hud->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/" + info.head_name + ".png");
+            info.hud->getWidgetWithID("COUNTER")->setAttribute("caption", sp::string(info.lives));
+            info.hud->getWidgetWithID("BAR")->setAttribute("value", sp::string("1.0"));
+        }
+    }
+    
+    ~GameScene()
+    {
+        hud.destroy();
     }
     
     virtual void onFixedUpdate() override
@@ -150,12 +194,38 @@ public:
             else
                 active_challange = new Challange("goingup", previous_challange->exit);
         }
+
+        for(unsigned int n=0; n<player_info.size(); n++)
+        {
+            PlayerInfo& info = player_info[n];
+            if (!info.active)
+                continue;
+            if (!info.pawn)
+            {
+                info.lives--;
+                info.pawn = new PlayerPawn(getRoot(), PlayerInput::controllers[n], info.head_name);
+                info.pawn->respawn();
+                
+                info.hud->getWidgetWithID("COUNTER")->setAttribute("caption", sp::string(info.lives));
+                
+                int max_lives = 0;
+                for(PlayerInfo& i : player_info)
+                    if (i.active)
+                        max_lives = std::max(max_lives, i.lives);
+
+                for(PlayerInfo& i : player_info)
+                    if (i.active)
+                        i.hud->getWidgetWithID("BAR")->setAttribute("value", sp::string(float(i.lives) / float(max_lives)));
+            }
+        }
     }
 
 private:
     sp::P<sp::Camera> camera;
     sp::P<Challange> active_challange;
     sp::P<Challange> previous_challange;
+    
+    sp::P<sp::gui::Widget> hud;
 };
 
 int main(int argc, char** argv)
@@ -184,19 +254,23 @@ int main(int argc, char** argv)
     window->addLayer(scene_layer);
     window->setClearColor(sp::Color(0.25,0.25,0.25));
 
-    sp::Scene* scene = new GameScene();
-    
-    PlayerPawn* p = new PlayerPawn(scene->getRoot(), PlayerInput::left_controller, "elephant");
-    p->setPosition(sp::Vector2d(8, 8));
-    p = new PlayerPawn(scene->getRoot(), PlayerInput::right_controller, "giraffe");
-    p->setPosition(sp::Vector2d(8, 8));
-    p = new PlayerPawn(scene->getRoot(), PlayerInput::joy_controller, "hippo");
-    p->setPosition(sp::Vector2d(8, 8));
-    
-    sp::P<sp::gui::Widget> hud = sp::gui::Loader::load("gui/hud.gui", "HUD");
-    sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud)->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/elephant.png");
-    sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud)->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/giraffe.png");
-    sp::gui::Loader::load("gui/hud.gui", "ENTRY", hud)->getWidgetWithID("IMAGE")->setAttribute("texture", "player/head/hippo.png");
+    player_info.resize(3);
+    for(unsigned int n=0; n<player_info.size(); n++)
+    {
+        for(bool retry=true; retry;)
+        {
+            retry = false;
+            player_info[n].head_name = PlayerPawn::getRandomHeadName();
+            for(unsigned int m=0; m<n; m++)
+                if (player_info[n].head_name == player_info[m].head_name)
+                    retry = true;
+        }
+    }
+    player_info[0].active = true;
+    //player_info[1].active = true;
+    //player_info[2].active = true;
+
+    new GameScene();
     
     engine->run();
 

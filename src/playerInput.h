@@ -20,9 +20,7 @@ public:
     sp::io::Keybinding extra4;
     sp::io::Keybinding start;
     
-    static PlayerInput left_controller;
-    static PlayerInput right_controller;
-    static PlayerInput joy_controller;
+    static PlayerInput controllers[];
 };
 
 #endif//PLAYER_INPUT_H
