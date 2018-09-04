@@ -38,8 +38,8 @@ HeadInfo head_info[] = {
 PlayerPawn::PlayerPawn(sp::P<sp::Node> parent, PlayerInput& controller, sp::string head_name)
 : sp::Node(parent), controller(controller)
 {
-    animation = sp::SpriteAnimation::load("player/body.txt");
-    animation->play("Stand");
+    setAnimation(sp::SpriteAnimation::load("player/body.txt"));
+    animationPlay("Stand");
 
     HeadInfo i = head_info[0];
     for(int n=0; head_info[n].name != ""; n++)
@@ -114,7 +114,7 @@ void PlayerPawn::onFixedUpdate()
     {
         attacking = 5;
         sp::Vector2d pos = getPosition2D();
-        if (animation->getFlags() & sp::SpriteAnimation::FlipFlag)
+        if (animationGetFlags() & sp::SpriteAnimation::FlipFlag)
             pos.x -= 1.0;
         else
             pos.x += 1.0;
@@ -123,7 +123,7 @@ void PlayerPawn::onFixedUpdate()
             sp::P<PlayerPawn> player = object;
             if (player && player != this)
             {
-                if (animation->getFlags() & sp::SpriteAnimation::FlipFlag)
+                if (animationGetFlags() & sp::SpriteAnimation::FlipFlag)
                     player->setLinearVelocity(player->getLinearVelocity2D() + sp::Vector2d(-30, 15));
                 else
                     player->setLinearVelocity(player->getLinearVelocity2D() + sp::Vector2d(30, 15));
@@ -180,24 +180,24 @@ void PlayerPawn::onFixedUpdate()
     //Final.
     setLinearVelocity(velocity);
     if (movement_request < 0)
-        animation->setFlags(sp::SpriteAnimation::FlipFlag);
+        animationSetFlags(sp::SpriteAnimation::FlipFlag);
     else if (movement_request > 0)
-        animation->setFlags(0);
+        animationSetFlags(0);
     if (on_floor_counter > 0)
     {
         if (movement_request)
-            animation->play("Walk", std::abs(velocity.x) / max_run_speed);
+            animationPlay("Walk", std::abs(velocity.x) / max_run_speed);
         else
-            animation->play("Stand");
+            animationPlay("Stand");
     }
     else
     {
-        animation->play("Jump");
+        animationPlay("Jump");
     }
     if (attacking > 0)
     {
         attacking--;
-        animation->play("Attack");
+        animationPlay("Attack");
     }
     
     if (on_floor_counter > 0)
@@ -247,7 +247,7 @@ void PlayerPawn::respawn()
 
     render_data.color.a = 0.25;
     head->render_data.color.a = 0.5;
-    animation->play("Stand");
+    animationPlay("Stand");
 
     respawn_delay = 60;
 }
