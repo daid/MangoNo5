@@ -118,7 +118,7 @@ void PlayerPawn::onFixedUpdate()
             pos.x -= 1.0;
         else
             pos.x += 1.0;
-        getScene()->queryCollision(pos - sp::Vector2d(0.5,0.5), pos + sp::Vector2d(0.5,0.5), [this](sp::P<sp::Node> object) -> bool
+        getScene()->queryCollision(sp::Rect2d(pos - sp::Vector2d(0.5,0.5), sp::Vector2d(1,1)), [this](sp::P<sp::Node> object) -> bool
         {
             sp::P<PlayerPawn> player = object;
             if (player && player != this)

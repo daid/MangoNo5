@@ -230,6 +230,7 @@ private:
 
 int main(int argc, char** argv)
 {
+    sp::P<sp::Engine> engine = new sp::Engine();
     //Create resource providers, so we can load things.
     new sp::io::DirectoryResourceProvider("resources");
 
@@ -241,7 +242,6 @@ int main(int argc, char** argv)
     window->setFullScreen(true);
     window->hideCursor();
 #endif
-    sp::P<sp::Engine> engine = new sp::Engine();
     
     sp::gui::Theme::loadTheme("default", "gui/theme/basic.theme.txt");
     new sp::gui::Scene(sp::Vector2d(640, 480), sp::gui::Scene::Direction::Horizontal);

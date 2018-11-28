@@ -18,7 +18,7 @@ PlayerInput::PlayerInput(int index)
 , extra2(sp::string(index) + "_extra2", "C")
 , extra3(sp::string(index) + "_extra3", "V")
 , extra4(sp::string(index) + "_extra4", "B")
-, start(sp::string(index) + "_start", "Num1")
+, start(sp::string(index) + "_start", "1")
 {
     if (index == 1)
     {
@@ -32,14 +32,14 @@ PlayerInput::PlayerInput(int index)
         extra2.setKey("F");
         extra3.setKey("T");
         extra4.setKey("G");
-        start.setKey("Num2");
+        start.setKey("2");
     }
     if (index > 1)
     {
         sp::string joy = "joy:" + sp::string(index - 2) + ":";
-        left.setKey("");
+        left.clearKeys();
         right.setKey(joy + "axis:0");
-        up.setKey("");
+        up.clearKeys();
         down.setKey(joy + "axis:1");
         jump.setKey(joy + "button:2");
         attack.setKey(joy + "button:1");
