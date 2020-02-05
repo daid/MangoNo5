@@ -23,16 +23,16 @@ public:
     sp::Color color;
 };
 HeadInfo head_info[] = {
-    {"elephant", sp::Vector2f(424, 342), sp::Alignment::Center, sp::stringutil::toColor("#bdb6b6")},
-    {"giraffe",  sp::Vector2f(382, 370), sp::Alignment::Bottom, sp::stringutil::toColor("#e9bb00")},
-    {"hippo",    sp::Vector2f(333, 344), sp::Alignment::Center, sp::stringutil::toColor("#4178c2")},
-    {"monkey",   sp::Vector2f(392, 284), sp::Alignment::Center, sp::stringutil::toColor("#915b32")},
-    {"panda",    sp::Vector2f(392, 331), sp::Alignment::Bottom, sp::stringutil::toColor("#eeeeee")},
-    {"parrot",   sp::Vector2f(284, 284), sp::Alignment::Center, sp::stringutil::toColor("#d23007")},
-    {"penguin",  sp::Vector2f(284, 284), sp::Alignment::Center, sp::stringutil::toColor("#365a66")},
-    {"pig",      sp::Vector2f(359, 305), sp::Alignment::Bottom, sp::stringutil::toColor("#d987d9")},
-    {"rabbit",   sp::Vector2f(284, 414), sp::Alignment::Bottom, sp::stringutil::toColor("#bdbdbd")},
-    {"snake",    sp::Vector2f(284, 334), sp::Alignment::Top,    sp::stringutil::toColor("#66cc33")},
+    {"elephant", sp::Vector2f(424, 342), sp::Alignment::Center, sp::stringutil::convert::toColor("#bdb6b6")},
+    {"giraffe",  sp::Vector2f(382, 370), sp::Alignment::Bottom, sp::stringutil::convert::toColor("#e9bb00")},
+    {"hippo",    sp::Vector2f(333, 344), sp::Alignment::Center, sp::stringutil::convert::toColor("#4178c2")},
+    {"monkey",   sp::Vector2f(392, 284), sp::Alignment::Center, sp::stringutil::convert::toColor("#915b32")},
+    {"panda",    sp::Vector2f(392, 331), sp::Alignment::Bottom, sp::stringutil::convert::toColor("#eeeeee")},
+    {"parrot",   sp::Vector2f(284, 284), sp::Alignment::Center, sp::stringutil::convert::toColor("#d23007")},
+    {"penguin",  sp::Vector2f(284, 284), sp::Alignment::Center, sp::stringutil::convert::toColor("#365a66")},
+    {"pig",      sp::Vector2f(359, 305), sp::Alignment::Bottom, sp::stringutil::convert::toColor("#d987d9")},
+    {"rabbit",   sp::Vector2f(284, 414), sp::Alignment::Bottom, sp::stringutil::convert::toColor("#bdbdbd")},
+    {"snake",    sp::Vector2f(284, 334), sp::Alignment::Top,    sp::stringutil::convert::toColor("#66cc33")},
     {""}
 };
 
