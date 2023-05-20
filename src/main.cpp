@@ -73,7 +73,7 @@ public:
         load(sp::io::ResourceProvider::get("challanges/tilenames.lua"));
         load(sp::io::ResourceProvider::get("challanges/" + name + ".lua"));
         
-        coroutine = callCoroutine("run");
+        coroutine = callCoroutine("run").value();
     }
     
     ~Challange()
@@ -84,7 +84,7 @@ public:
     bool update()
     {
         active = this;
-        if (coroutine && coroutine->resume())
+        if (coroutine && coroutine->resume().value())
             return false;
         return true;
     }
@@ -101,15 +101,15 @@ Challange* Challange::active;
 
 static void luaf_setTile(int x, int y, int tile_index, bool non_solid)
 {
-    Challange::active->tilemap->setTile(x, y, tile_index, non_solid ? sp::Tilemap::Collision::Open : sp::Tilemap::Collision::Solid);
+    Challange::active->tilemap->setTile({x, y}, tile_index, non_solid ? sp::Tilemap::Collision::Open : sp::Tilemap::Collision::Solid);
 }
 static void luaf_setPlatformTile(int x, int y, int tile_index)
 {
-    Challange::active->tilemap->setTile(x, y, tile_index, sp::Tilemap::Collision::Platform);
+    Challange::active->tilemap->setTile({x, y}, tile_index, sp::Tilemap::Collision::Platform);
 }
 static void luaf_removeTile(int x, int y)
 {
-    Challange::active->tilemap->setTile(x, y, -1);
+    Challange::active->tilemap->setTile({x, y}, -1);
 }
 static void luaf_setExit(double x, double y)
 {
